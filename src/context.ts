@@ -84,3 +84,25 @@ export async function initSettings(): Promise<void> {
   };
   console.log(settings);
 }
+
+
+export const eqs: eAssignment[] = [];
+
+export function init_eqs(strips: OutParam[]): void {
+  for (let i = 0; i < 3; i++) {
+    eqs[i] = new eAssignment(`EQ ${i}`, {
+      name: `Ew ${i}`,
+      throttle: 0,
+    });
+
+    eqs[i].on("volumeChanged", (level: number) => {
+      eqs[i].updated = true;
+      eqs[i].volume = level;
+      vm.setStripParameter(`EQGain${i+1}`, 5, level);
+    });
+  }
+}
+
+
+
+

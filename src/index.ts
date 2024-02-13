@@ -9,6 +9,8 @@ import { parseToggleButtons } from "./BusToggles";
 import {
   strip,
   bus,
+  eqs,
+  init_eqs,
   buttons,
   eButton,
   eAssignment,
@@ -231,6 +233,7 @@ async function connectVM() {
       init_strips(data.strips);
       init_buses(data.buses);
       init_buttons(data.strips);
+      init_eqs(data.strips)
       update_all();
 
       clearInterval(vmUpdateInterval);
