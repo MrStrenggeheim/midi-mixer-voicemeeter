@@ -6,7 +6,7 @@ import {
   OutParam,
   StripParamName,
 } from "ts-easy-voicemeeter-remote";
-import { convertGainToPad, convertGainToVolume } from "./utils";
+import { convertGainToPad, convertGainToVolume, clampBar } from "./utils";
 
 export const vm = new VoiceMeeter();
 
@@ -120,10 +120,24 @@ export function init_eqs(strips: OutParam[]): void {
     });
 
     eqs[i].on("assignPressed", () => {
+      eqs[i].updated = true;
+      eqs[i].volume = 0.5;
       vm.setStripParameter(eq_names[i], 5, 0);
       vm.setStripParameter(eq_names[i], 6, 0);
       vm.setStripParameter(eq_names[i], 7, 0);
     });
+
+
+    clearInterval(eqs[i].meterInterval);
+    eqs[i].meterInterval = setInterval(() => {
+      const rawLevel = vm.getLevelByID(2, i);
+      const averageLevel = ((rawLevel?.r ?? 0) + (rawLevel?.l ?? 0)) / 2;
+      const meterLevel = averageLevel / 60;
+      const clampedVal = clampBar(meterLevel);
+      if (clampedVal !== 0) {
+        eqs[i].meter = clampedVal;
+      }
+    }, eqs[i].throttle);
   }
 }
 

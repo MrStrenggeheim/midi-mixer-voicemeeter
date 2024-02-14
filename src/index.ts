@@ -49,11 +49,11 @@ function init_buttons(strips: OutParam[]) {
 
     reverb_button.on('pressed', () => {
       reverb_button.active = !reverb_button.active;
-      vm.setStripParameter('Reverb', 0, reverb_button.active ? 0 : settings.reverbLevel)
+      vm.setStripParameter('Reverb', 0, reverb_button.active ? settings.reverbLevel : 0)
     });
     delay_button.on('pressed', () => {
       delay_button.active = !delay_button.active;
-      vm.setStripParameter('Delay', 0, delay_button.active ? 0 : settings.delayLevel)
+      vm.setStripParameter('Delay', 0, delay_button.active ? settings.delayLevel : 0)
     });
     
 

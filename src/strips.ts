@@ -1,6 +1,6 @@
 import { OutParam, StripParamName } from "ts-easy-voicemeeter-remote";
 import { eAssignment, strip, stripCount, vm, settings } from "./context";
-import { clampBar, convertVolumeToGain } from "./utils";
+import { clampBar, convertGainToVolume, convertVolumeToGain } from "./utils";
 
 export function init_strips(strips: OutParam[]): void {
   const customAssignOptions = parseCustomStrip(settings.customStripAssign);
@@ -19,84 +19,89 @@ export function init_strips(strips: OutParam[]): void {
       vm.setStripParameter("gain", i, convertVolumeToGain(level));
     });
 
-    if (customAssignOptions.busToggles.length != 0) {
-      // assign state based on whatever the first option is
-      // I don't see a good solution for if it should be on or off
-      strip[i].assigned = getStripLightState(customAssignOptions, strips[i]);
+    strip[i].on("assignPressed", () => {
+      strip[i].updated = true;
+      strip[i].volume = convertGainToVolume(0);
+      vm.setStripParameter("gain", i, 0)
+    });
 
-      strip[i].on("assignPressed", () => {
-        vm.setStripParameter("gain", i, 0)
-        // strip[i].assigned = !strip[i].assigned;
+    // if (customAssignOptions.busToggles.length != 0) {
+    //   // assign state based on whatever the first option is
+    //   // I don't see a good solution for if it should be on or off
+    //   strip[i].assigned = getStripLightState(customAssignOptions, strips[i]);
 
-        // for (const toggle of customAssignOptions.busToggles) {
-        //   vm.setStripParameter(
-        //     toggle.Bus,
-        //     i,
-        //     strip[i].assigned == toggle.invertState
-        //   );
-        // }
-      });
+    //   strip[i].on("assignPressed", () => {
+    //     strip[i].assigned = !strip[i].assigned;
 
-      strip[i].customAssignUpdate = (data: OutParam) => {
-        strip[i].assigned = getStripLightState(customAssignOptions, data);
-      };
-    } else {
-      strip[i].assigned = true;
-      // No current need for the assign button on strips
-      // strip[i].on("assignPressed", () => {
-      //   strip[i].assigned = !strip[i].assigned;
-      // });
-    }
+    //     for (const toggle of customAssignOptions.busToggles) {
+    //       vm.setStripParameter(
+    //         toggle.Bus,
+    //         i,
+    //         strip[i].assigned == toggle.invertState
+    //       );
+    //     }
+    //   });
 
-    if (customMuteOptions.busToggles.length != 0) {
-      strip[i].muted = getStripLightState(customMuteOptions, strips[i]);
+    //   strip[i].customAssignUpdate = (data: OutParam) => {
+    //     strip[i].assigned = getStripLightState(customAssignOptions, data);
+    //   };
+    // } else {
+    //   strip[i].assigned = true;
+    //   // No current need for the assign button on strips
+    //   // strip[i].on("assignPressed", () => {
+    //   //   strip[i].assigned = !strip[i].assigned;
+    //   // });
+    // }
 
-      strip[i].on("mutePressed", () => {
-        console.log("mute pressed");
+    // if (customMuteOptions.busToggles.length != 0) {
+    //   strip[i].muted = getStripLightState(customMuteOptions, strips[i]);
 
-        for (const toggle of customMuteOptions.busToggles) {
-          vm.setStripParameter(
-            toggle.Bus,
-            i,
-            !strip[i].muted == toggle.invertState
-          );
-        }
-      });
+    //   strip[i].on("mutePressed", () => {
+    //     console.log("mute pressed");
 
-      strip[i].customMuteUpdate = (data: OutParam) => {
-        strip[i].muted = getStripLightState(customMuteOptions, data);
-      };
-    } else {
-      strip[i].on("mutePressed", () => {
-        strip[i].muted = !strip[i].muted;
-        vm.setStripParameter("mute", i, strip[i].muted);
-      });
-    }
+    //     for (const toggle of customMuteOptions.busToggles) {
+    //       vm.setStripParameter(
+    //         toggle.Bus,
+    //         i,
+    //         !strip[i].muted == toggle.invertState
+    //       );
+    //     }
+    //   });
 
-    if (customRunOptions.busToggles.length != 0) {
-      strip[i].running = getStripLightState(customRunOptions, strips[i]);
+    //   strip[i].customMuteUpdate = (data: OutParam) => {
+    //     strip[i].muted = getStripLightState(customMuteOptions, data);
+    //   };
+    // } else {
+    //   strip[i].on("mutePressed", () => {
+    //     strip[i].muted = !strip[i].muted;
+    //     vm.setStripParameter("mute", i, strip[i].muted);
+    //   });
+    // }
 
-      strip[i].on("runPressed", () => {
-        strip[i].running = !strip[i].running;
+    // if (customRunOptions.busToggles.length != 0) {
+    //   strip[i].running = getStripLightState(customRunOptions, strips[i]);
 
-        for (const toggle of customRunOptions.busToggles) {
-          vm.setStripParameter(
-            toggle.Bus,
-            i,
-            strip[i].running == toggle.invertState
-          );
-        }
-      });
+    //   strip[i].on("runPressed", () => {
+    //     strip[i].running = !strip[i].running;
 
-      strip[i].customRunUpdate = (data: OutParam) => {
-        strip[i].running = getStripLightState(customRunOptions, data);
-      };
-    } else {
-      strip[i].on("runPressed", () => {
-        strip[i].running = !strip[i].running;
-        vm.setStripParameter("solo", i, strip[i].running);
-      });
-    }
+    //     for (const toggle of customRunOptions.busToggles) {
+    //       vm.setStripParameter(
+    //         toggle.Bus,
+    //         i,
+    //         strip[i].running == toggle.invertState
+    //       );
+    //     }
+    //   });
+
+    //   strip[i].customRunUpdate = (data: OutParam) => {
+    //     strip[i].running = getStripLightState(customRunOptions, data);
+    //   };
+    // } else {
+    //   strip[i].on("runPressed", () => {
+    //     strip[i].running = !strip[i].running;
+    //     vm.setStripParameter("solo", i, strip[i].running);
+    //   });
+    // }
 
     clearInterval(strip[i].meterInterval);
     strip[i].meterInterval = setInterval(() => {
