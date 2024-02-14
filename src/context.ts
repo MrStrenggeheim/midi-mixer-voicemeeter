@@ -98,7 +98,7 @@ export function init_eqs(strips: OutParam[]): void {
     eqs[i].on("volumeChanged", (level: number) => {
       eqs[i].updated = true;
       eqs[i].volume = level;
-      vm.setStripParameter(`EQGain${i+1}`, 5, level);
+      vm.setStripParameter(`EQGain1`, 5, level);
     });
   }
 }

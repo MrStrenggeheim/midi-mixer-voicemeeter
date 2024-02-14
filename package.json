@@ -43,5 +43,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Jaggernaut555/midi-mixer-voicemeeter.git"
-  }
+  },
+  "bundleDependencies": [
+    "midi-mixer-plugin",
+    "ts-easy-voicemeeter-remote"
+  ]
 }
