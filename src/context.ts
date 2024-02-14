@@ -61,6 +61,10 @@ export function setMeterCount(version: VoiceMeeterType): void {
 interface Settings {
   maxdb: number;
   mindb: number;
+  minpan: number;
+  maxpan: number;
+  reverbLevel: number;
+  delayLevel: number;
   busToggles: string;
   customStripAssign: string;
   customStripMute: string;
@@ -79,6 +83,10 @@ export async function initSettings(): Promise<void> {
     mindb: isNaN(parseFloat(config["mindb"]))
       ? -60
       : parseFloat(config["mindb"]),
+    minpan: parseFloat(config['minpan']),
+    maxpan: parseFloat(config['maxpan']),
+    reverbLevel: parseFloat(config['reverbLevel']),
+    delayLevel: parseFloat(config['delayLevel']),
     busToggles: config["BusToggles"],
     customStripAssign: config["customStripAssign"],
     customStripMute: config["customStripMute"],
@@ -86,6 +94,11 @@ export async function initSettings(): Promise<void> {
   };
   console.log(settings);
 }
+
+
+
+
+// check parameters: https://github.com/Jaggernaut555/ts-easy-voicemeeter-remote/blob/master/src/ioFuncs.ts
 
 
 export const eqs: eAssignment[] = [];

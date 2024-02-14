@@ -25,15 +25,16 @@ export function init_strips(strips: OutParam[]): void {
       strip[i].assigned = getStripLightState(customAssignOptions, strips[i]);
 
       strip[i].on("assignPressed", () => {
-        strip[i].assigned = !strip[i].assigned;
+        vm.setStripParameter("gain", i, 0)
+        // strip[i].assigned = !strip[i].assigned;
 
-        for (const toggle of customAssignOptions.busToggles) {
-          vm.setStripParameter(
-            toggle.Bus,
-            i,
-            strip[i].assigned == toggle.invertState
-          );
-        }
+        // for (const toggle of customAssignOptions.busToggles) {
+        //   vm.setStripParameter(
+        //     toggle.Bus,
+        //     i,
+        //     strip[i].assigned == toggle.invertState
+        //   );
+        // }
       });
 
       strip[i].customAssignUpdate = (data: OutParam) => {

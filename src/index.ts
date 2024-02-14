@@ -22,6 +22,7 @@ import {
 } from "./context";
 import { init_strips } from "./strips";
 import { clampBar, convertGainToVolume, convertVolumeToGain } from "./utils";
+import { deflateSync } from "zlib";
 
 let selectedBus: number | null = null;
 
@@ -33,30 +34,53 @@ function init_buttons(strips: OutParam[]) {
   const toggleButtons = parseToggleButtons(settings.busToggles);
 
   for (const tb of toggleButtons) {
-    const tempStrip = strips[tb.Strip];
-    for (const b of tb.Buses) {
-      const tempButton = new eButton(
-        `Strip${tb.Strip} -> ${b.LightState ? "" : "!"}${b.Bus}`,
-        {
-          name: `Strip${tb.Strip} -> ${b.LightState ? "" : "!"}${b.Bus}`,
-          active: tempStrip[b.Bus] == b.LightState,
-        }
-      );
 
-      tempButton.on("pressed", () => {
-        tempButton.active = !tempButton.active;
-        vm.setStripParameter(
-          b.Bus,
-          tb.Strip,
-          tempButton.active == b.LightState
-        );
-      });
+    // reverb, delay
+    const reverb_button = new eButton('Reverb', {
+        name: 'Reverb',
+        active: false
+      }
+    );
+    const delay_button = new eButton('Delay', {
+        name: 'Delay',
+        active: false
+      }
+    );
 
-      tempButton.update = (data) => {
-        tempButton.active = data.strips[tb.Strip][b.Bus] == b.LightState;
-      };
-      buttons.push(tempButton);
-    }
+    reverb_button.on('pressed', () => {
+      reverb_button.active = !reverb_button.active;
+      vm.setStripParameter('Reverb', 0, reverb_button.active ? 0 : settings.reverbLevel)
+    });
+    delay_button.on('pressed', () => {
+      delay_button.active = !delay_button.active;
+      vm.setStripParameter('Delay', 0, delay_button.active ? 0 : settings.delayLevel)
+    });
+    
+
+    // const tempStrip = strips[tb.Strip];
+    // for (const b of tb.Buses) {
+    //   const tempButton = new eButton(
+    //     `Strip${tb.Strip} -> ${b.LightState ? "" : "!"}${b.Bus}`,
+    //     {
+    //       name: `Strip${tb.Strip} -> ${b.LightState ? "" : "!"}${b.Bus}`,
+    //       active: tempStrip[b.Bus] == b.LightState,
+    //     }
+    //   );
+
+    //   tempButton.on("pressed", () => {
+    //     tempButton.active = !tempButton.active;
+    //     vm.setStripParameter(
+    //       b.Bus,
+    //       tb.Strip,
+    //       tempButton.active == b.LightState
+    //     );
+    //   });
+
+    //   tempButton.update = (data) => {
+    //     tempButton.active = data.strips[tb.Strip][b.Bus] == b.LightState;
+    //   };
+    //   buttons.push(tempButton);
+    // }
   }
 
   const restartButton = new ButtonType("RestartVoicemeeter", {
