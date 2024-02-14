@@ -4,7 +4,9 @@ import {
   VoiceMeeterType,
   OutParamData,
   OutParam,
+  StripParamName,
 } from "ts-easy-voicemeeter-remote";
+import { convertGainToPad, convertGainToVolume } from "./utils";
 
 export const vm = new VoiceMeeter();
 
@@ -87,18 +89,27 @@ export async function initSettings(): Promise<void> {
 
 
 export const eqs: eAssignment[] = [];
+export const eq_names: StripParamName[] = ['EQGain1', 'EQGain2', 'EQGain3']
 
 export function init_eqs(strips: OutParam[]): void {
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 2; i++) {
     eqs[i] = new eAssignment(`EQ ${i}`, {
-      name: `Ew ${i}`,
+      name: `EQ ${i}`,
       throttle: 0,
     });
 
     eqs[i].on("volumeChanged", (level: number) => {
       eqs[i].updated = true;
       eqs[i].volume = level;
-      vm.setStripParameter(`EQGain1`, 5, level);
+      vm.setStripParameter(eq_names[i], 5, convertGainToPad(level));
+      vm.setStripParameter(eq_names[i], 6, convertGainToPad(level));
+      vm.setStripParameter(eq_names[i], 7, convertGainToPad(level));
+    });
+
+    eqs[i].on("assignPressed", () => {
+      vm.setStripParameter(eq_names[i], 5, 0);
+      vm.setStripParameter(eq_names[i], 6, 0);
+      vm.setStripParameter(eq_names[i], 7, 0);
     });
   }
 }

@@ -27,3 +27,11 @@ export function convertGainToVolume(level: number): number {
 export function clampBar(value: number): number {
   return Math.min(Math.max(0, value), 1);
 }
+
+/**
+ * convert 0-1 to -12 to 12
+ * @param value
+ */
+export function convertGainToPad(level: number): number {
+  return level * 24 - 12
+}
