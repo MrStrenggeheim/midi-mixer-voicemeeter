@@ -92,7 +92,7 @@ export const eqs: eAssignment[] = [];
 export const eq_names: StripParamName[] = ['EQGain1', 'EQGain2', 'EQGain3']
 
 export function init_eqs(strips: OutParam[]): void {
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 3; i++) {
     eqs[i] = new eAssignment(`EQ ${i}`, {
       name: `EQ ${i}`,
       throttle: 0,
