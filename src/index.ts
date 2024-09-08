@@ -21,7 +21,7 @@ import {
   vm,
 } from "./context";
 import { init_strips } from "./strips";
-import { clampBar, convertGainToVolume, convertVolumeToGain } from "./utils";
+import { clampBar, convertGainToVolume, convertVolumeToGain, convertPadToGain } from "./utils";
 import { deflateSync } from "zlib";
 
 let selectedBus: number | null = null;
@@ -210,6 +210,15 @@ function update_all() {
       }
       strip[i.id].updated = false;
     });
+
+    
+    // // update eq knob to match voicemeeter
+    // eqs.forEach((eq, i) => {
+    //   if (!eq.updated) {
+    //     eq.volume = convertPadToGain(data.strips[5][`EQGain${i}` as StripParamName]);
+    //   }
+    //   eq.updated = false;
+    // });
 
     // include button updates here somehow
     buttons.forEach((b) => {

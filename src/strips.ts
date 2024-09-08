@@ -25,6 +25,11 @@ export function init_strips(strips: OutParam[]): void {
       vm.setStripParameter("gain", i, 0)
     });
 
+    strip[i].on("mutePressed", () => {
+      strip[i].muted = !strip[i].muted;
+      vm.setStripParameter("mute", i, strip[i].muted);
+    });
+
     // if (customAssignOptions.busToggles.length != 0) {
     //   // assign state based on whatever the first option is
     //   // I don't see a good solution for if it should be on or off

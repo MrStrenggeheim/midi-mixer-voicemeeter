@@ -35,3 +35,11 @@ export function clampBar(value: number): number {
 export function convertGainToPad(level: number): number {
   return level * 24 - 12
 }
+
+/**
+ * convert -12 to 12 to 0-1
+ * @param value
+ */
+export function convertPadToGain(level: number): number {
+  return (level + 12) / 24
+}

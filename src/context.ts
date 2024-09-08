@@ -108,7 +108,7 @@ export function init_eqs(strips: OutParam[]): void {
   for (let i = 0; i < 3; i++) {
     eqs[i] = new eAssignment(`EQ ${i}`, {
       name: `EQ ${i}`,
-      throttle: 0,
+      volume: 0.5,
     });
 
     eqs[i].on("volumeChanged", (level: number) => {
